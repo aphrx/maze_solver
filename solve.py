@@ -2,7 +2,7 @@ from PIL import Image
 import numpy as np
 import random
 
-im = Image.open("mazes/maze-3.png")
+im = Image.open("mazes/maze-2.png")
 pix = im.load()
 print(pix[9, 8])
 
@@ -45,38 +45,31 @@ def search(start, end, img, pix):
             if ((pix[move] >= (200, 200, 200) or pix[move] == (0, 9, 254)) and pix[move] != (255, 255, 0) and move != start):
                 possible.append(move)
 
-        print(current)
-        print(possible)
-        print(intersects)
+        
         if len(possible) >= 2:
             if current not in intersects:
                 intersects.append(current)
         if len(possible) == 0:
-            if current not in intersects:
-                i = path.index(intersects[-1])
-                current = intersects[-1]
-                intersects = intersects[:i-1]
-
-                path = path[:i+1]
-            else:
-                index = intersects.index(current)-1
-                print(index)
-                i = path.index(intersects[index])
-                current = intersects[index]
-                intersects = intersects[:i-(len(intersects)-index)]
-                path = path[:i+2]
-
+            intersects = intersects[::-1]
+            for i in intersects:
+                if i != current:
+                    print(str(current) + " to " + str(i))
+                    current = i
+                    intersects.pop(intersects.index(i))
+                    
+                    break
+            print(current)
+            print(intersects)
+            print(path)
+            path = path[:path.index(current)]
+            
         else:
             current = random.choice(possible)
-        
         path.append(current)
+        print(current)
         array[current[1], current[0]] = (255, 255, 0)
         img=Image.fromarray(array)
         pix = img.load()
-    
-    print(intersects)
-    print(path)
-
     for p in path:
         array[p[1], p[0]] = (0, 255, 0)
     img=Image.fromarray(array)
