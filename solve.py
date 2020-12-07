@@ -2,7 +2,7 @@ from PIL import Image
 import numpy as np
 import random
 
-im = Image.open("mazes/maze-2.png")
+im = Image.open("mazes/maze-3.png")
 pix = im.load()
 print(pix[9, 8])
 
@@ -17,8 +17,6 @@ def find_ends(img):
     
     start_loc = (Xs[0], Ys[0])
     end_loc = (Xe[0], Ye[0])
-    print(str(start_loc))
-    print(str(end_loc))
     return start_loc, end_loc
 
 def show(im):
@@ -50,23 +48,19 @@ def search(start, end, img, pix):
             if current not in intersects:
                 intersects.append(current)
         if len(possible) == 0:
-            intersects = intersects[::-1]
-            for i in intersects:
+            intersects_reversed = intersects[::-1]
+            for i in intersects_reversed:
                 if i != current:
-                    print(str(current) + " to " + str(i))
                     current = i
                     intersects.pop(intersects.index(i))
                     
                     break
-            print(current)
-            print(intersects)
-            print(path)
             path = path[:path.index(current)]
+            
             
         else:
             current = random.choice(possible)
         path.append(current)
-        print(current)
         array[current[1], current[0]] = (255, 255, 0)
         img=Image.fromarray(array)
         pix = img.load()
